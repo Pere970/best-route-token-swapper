@@ -10,7 +10,7 @@ import {
   import { token } from "../typechain-types/@openzeppelin/contracts";
   
   const WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
-  const DAI = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+  const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
   const UNISWAPV2_ROUTER = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
   const SUSHISWAP_ROUTER = "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F";
   const UNISWAPV3_ROUTER = "0xE592427A0AEce92De3Edee1F18E0157C05861564";
@@ -21,7 +21,7 @@ import {
       const accounts = await ethers.getSigners();
 
       const weth = await ethers.getContractAt("IWETH", WETH);
-      const dai = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", DAI);
+      const usdt = await ethers.getContractAt("@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20", USDT);
 
       const TokenSwapper = await ethers.getContractFactory("TokenSwapper");
       const tokenSwapper = await TokenSwapper.deploy(
@@ -60,7 +60,7 @@ import {
           break;
       }
 
-      expect(await dai.balanceOf(accounts[0].address)).greaterThan(0);
+      expect(await usdt.balanceOf(accounts[0].address)).greaterThan(0);
     });
   });
   

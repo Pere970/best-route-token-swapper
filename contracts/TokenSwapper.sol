@@ -15,10 +15,10 @@ contract TokenSwapper {
     address private _uniswapV3Quoter;
     address private _sushiswapRouter;
 
-    uint24 public constant poolFee = 3000;
+    uint24 public constant poolFee = 500;
 
     address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
-    address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+    address public constant USDT = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
     constructor (
         address uniswapV2Router,
@@ -36,7 +36,7 @@ contract TokenSwapper {
     function fetchUniswapRouterV2Quote(address routerAddress, uint amountIn) public view returns (uint amountOut){
         address[] memory path = new address[](2);
         path[0] = WETH;
-        path[1] = DAI;
+        path[1] = USDT;
 
         return IUniswapV2Router02(routerAddress).getAmountsOut(amountIn, path)[1];
     }
@@ -44,9 +44,9 @@ contract TokenSwapper {
     function fetchUniswapV3Quote(uint amountIn) public returns (uint amountOut){
         address[] memory path = new address[](2);
         path[0] = WETH;
-        path[1] = DAI;
+        path[1] = USDT;
 
-        return IQuoter(_uniswapV3Quoter).quoteExactInputSingle(WETH, DAI, poolFee, amountIn, 0);
+        return IQuoter(_uniswapV3Quoter).quoteExactInputSingle(WETH, USDT, poolFee, amountIn, 0);
     }
     
 
@@ -63,7 +63,7 @@ contract TokenSwapper {
         ISwapRouter.ExactInputSingleParams memory params =
             ISwapRouter.ExactInputSingleParams({
                 tokenIn: WETH,
-                tokenOut: DAI,
+                tokenOut: USDT,
                 fee: poolFee,
                 recipient: msg.sender,
                 deadline: block.timestamp,
@@ -82,7 +82,7 @@ contract TokenSwapper {
 
         address[] memory path = new address[](2);
         path[0] = WETH;
-        path[1] = DAI;
+        path[1] = USDT;
         uint amountOut = IUniswapV2Router02(routerAddress).swapExactTokensForTokens(amountIn, 0, path, msg.sender, block.timestamp)[1];
         emit TokenSwap(msg.value, amountOut, routerAddress);
     } 
