@@ -1,5 +1,8 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+require("dotenv").config()
+
+const MAINNET_RPC_URL =  process.env.ALCHEMY_MAINNET_RPC_URL || "https://eth-mainnet.g.alchemy.com/v2/your-api-key";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -15,7 +18,7 @@ const config: HardhatUserConfig = {
   networks : {
     hardhat : {
       forking: {
-        url: <custom Alchemy/Infura endpoint>,
+        url: MAINNET_RPC_URL,
         blockNumber: 19503319
       }
     }

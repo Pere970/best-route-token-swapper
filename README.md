@@ -18,11 +18,15 @@ Execute **npm install** to install all the needed dependencies:
 ```
 npm install --save
 ```
-Modify the networks configuration under hardhat.config.ts to set the desired url and block to fork from:
+Create a .env file in project's root folder and add the following ENV variable:
+```
+ALCHEMY_MAINNET_RPC_URL = "https://eth-mainnet.g.alchemy.com/v2/your_api_key"
+```
+
+(Optional) Modify blocknumber in hardhat.config.ts to the desired blocknumber or remove it for "latest":
 ```
 hardhat : {
     forking: {
-        url: <Alchemy URL to mainnet>,
         blockNumber: <Desired blocknumber to fork from, remove this property if latest is desired>
     }
 }
@@ -30,12 +34,17 @@ hardhat : {
 ## Commands
 Compile smart contracts with hardhat:
 ```
-npx hardhat compile
+npm run compile
+```
+
+Deploy smart contract to blockchain: 
+```
+npm run deploy
 ```
 
 ### Testing Instructions
 
 In order to execute the unit tests, run the following command:
 ```
-npx hardhat test  
+npm run test  
 ```
