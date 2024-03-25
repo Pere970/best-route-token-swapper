@@ -19,6 +19,9 @@ contract TokenSwapper {
     address private constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant USDT = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
+    uint256 private _usdtIndexInCurvePool;
+    uint256 private _wethIndexInCurvePool;
+
     uint24 public constant poolFee = 500;
 
     constructor (
@@ -26,7 +29,9 @@ contract TokenSwapper {
         address uniswapV3Router,
         address sushiswapRouter,
         address uniswapV3Quoter,
-        address curveFiWETHUSDTPool
+        address curveFiWETHUSDTPool,
+        uint256 usdtIndexInCurvePool,
+        uint256 wethIndexInCurvePool
     ) {
         _uniswapV2Router = uniswapV2Router;
         _uniswapV3Router = uniswapV3Router;
@@ -34,6 +39,9 @@ contract TokenSwapper {
         _curveFiWETHUSDTPool = curveFiWETHUSDTPool;
         
         _uniswapV3Quoter = uniswapV3Quoter;
+
+        _usdtIndexInCurvePool = usdtIndexInCurvePool;
+        _wethIndexInCurvePool = wethIndexInCurvePool;
     }
 
     function fetchUniswapRouterV2Quote(address routerAddress, uint amountIn) internal view returns (uint256 amountOut){
@@ -53,7 +61,7 @@ contract TokenSwapper {
     }
 
     function fecthCurveFiQuote(uint amountIn) internal view returns (uint256 amountOut){
-        amountOut = ICurvePool(_curveFiWETHUSDTPool).get_dy(2, 0, amountIn);
+        amountOut = ICurvePool(_curveFiWETHUSDTPool).get_dy(_wethIndexInCurvePool, _usdtIndexInCurvePool, amountIn);
     }
     
 
@@ -101,7 +109,7 @@ contract TokenSwapper {
         TransferHelper.safeTransferFrom(WETH, msg.sender, address(this), amountIn);
         TransferHelper.safeApprove(WETH, _curveFiWETHUSDTPool, amountIn);
 
-        ICurvePool(_curveFiWETHUSDTPool).exchange(2, 0, amountIn, 0);
+        ICurvePool(_curveFiWETHUSDTPool).exchange(_wethIndexInCurvePool, _usdtIndexInCurvePool, amountIn, 0);
         
         require(IERC20(USDT).balanceOf(address(this)) > 0, "Swap not succeeded");
         emit TokenSwap(amountIn, IERC20(USDT).balanceOf(address(this)), _curveFiWETHUSDTPool);

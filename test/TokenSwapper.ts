@@ -29,7 +29,9 @@ describe("TokenSwapper", function () {
       UNISWAPV3_ROUTER,
       SUSHISWAP_ROUTER,
       UNISWAPV3_QUOTER,
-      CURVEFI_WETHUSDT_POOL
+      CURVEFI_WETHUSDT_POOL,
+      0, //USDT index in Curve Pool
+      2 //WETH index in Curve Pool
     );
     await tokenSwapper.waitForDeployment();
 
